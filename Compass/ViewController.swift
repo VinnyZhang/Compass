@@ -8,18 +8,21 @@
 
 import UIKit
 import CoreLocation
+import ARKit
+import SceneKit
 
-class ViewController: UIViewController {
+class ViewController: ARSCNBaseViewController {
     
     var compassImageView: UIImageView!
     var CLManager = CLLocationManager()
+    var directionSuccess = false
+    
 
     //    MARK: - life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         setUpMyViews()
-        
         
     }
 
@@ -36,12 +39,29 @@ class ViewController: UIViewController {
     func setUpMyViews() {
         compassImageView = UIImageView()
         self.view.addSubview(compassImageView)
-        compassImageView.frame = CGRect(x: (self.view.frame.size.width - 100)/2.0, y: (self.view.frame.size.height - 100)/2.0, width: 100, height: 100)
+        compassImageView.frame = CGRect(x: (self.view.frame.size.width - 150)/2.0, y: (self.view.frame.size.height - 180), width: 150, height: 150)
         compassImageView.image = UIImage(named: "compass")
         
         CLManager.delegate = self
         CLManager.startUpdatingHeading()
         
+    }
+    
+    /// 改变世界坐标原点
+    ///
+    /// - Parameter angle: 磁极北方旋转的角度
+    func changeWorldOrigin(angle: Float) {
+//        Y轴作为重力方向，只需绕着Y轴旋转世界原点坐标的方向，来匹配 东南西北。匹配后 Z轴正方向指向南方
+        let matrix4_X = SCNMatrix4MakeRotation(0.0, 1.0, 0.0, 0.0)
+        let matrix4_Y = SCNMatrix4MakeRotation(angle, 0.0, 1.0, 0.0)
+        let matrix4_Z = SCNMatrix4MakeRotation(0.0, 0.0, 0.0, 1.0)
+        let matrix4_T = SCNMatrix4MakeTranslation(0.0, 0.0, 0.0)
+        
+        let mXY =  SCNMatrix4Mult(matrix4_X, matrix4_Y)
+        let mXYZ = SCNMatrix4Mult(mXY, matrix4_Z)
+        let mT = SCNMatrix4Mult(mXYZ, matrix4_T)
+        
+        gameView.session.setWorldOrigin(relativeTransform: simd_float4x4(mT))
     }
 
 
@@ -63,6 +83,13 @@ extension ViewController: CLLocationManagerDelegate {
             self.compassImageView.transform = CGAffineTransform(rotationAngle: -CGFloat(angle))
             
         }
+        
+        if !directionSuccess {
+            directionSuccess = true
+            changeWorldOrigin(angle: Float(angle))
+        }
+        
+        
         
     }
 }

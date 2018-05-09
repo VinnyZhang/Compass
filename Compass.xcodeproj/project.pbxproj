@@ -12,7 +12,8 @@
 		5F11F18620901D8A0077683A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5F11F18420901D8A0077683A /* Main.storyboard */; };
 		5F11F18820901D8B0077683A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5F11F18720901D8B0077683A /* Assets.xcassets */; };
 		5F11F18B20901D8B0077683A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5F11F18920901D8B0077683A /* LaunchScreen.storyboard */; };
-		5F11F19320901E2F0077683A /* compass.png in Resources */ = {isa = PBXBuildFile; fileRef = 5F11F19220901E2F0077683A /* compass.png */; };
+		5F1E5D1220A2E2DA0011D60C /* compass.png in Resources */ = {isa = PBXBuildFile; fileRef = 5F1E5D1120A2E2DA0011D60C /* compass.png */; };
+		5F1E5D1420A2E32C0011D60C /* ARSCNBaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F1E5D1320A2E32C0011D60C /* ARSCNBaseViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -23,7 +24,8 @@
 		5F11F18720901D8B0077683A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5F11F18A20901D8B0077683A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		5F11F18C20901D8B0077683A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		5F11F19220901E2F0077683A /* compass.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = compass.png; sourceTree = "<group>"; };
+		5F1E5D1120A2E2DA0011D60C /* compass.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = compass.png; sourceTree = "<group>"; };
+		5F1E5D1320A2E32C0011D60C /* ARSCNBaseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ARSCNBaseViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,7 +58,8 @@
 		5F11F17F20901D890077683A /* Compass */ = {
 			isa = PBXGroup;
 			children = (
-				5F11F19220901E2F0077683A /* compass.png */,
+				5F1E5D1320A2E32C0011D60C /* ARSCNBaseViewController.swift */,
+				5F1E5D1120A2E2DA0011D60C /* compass.png */,
 				5F11F18020901D8A0077683A /* AppDelegate.swift */,
 				5F11F18220901D8A0077683A /* ViewController.swift */,
 				5F11F18420901D8A0077683A /* Main.storyboard */,
@@ -125,7 +128,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5F11F19320901E2F0077683A /* compass.png in Resources */,
+				5F1E5D1220A2E2DA0011D60C /* compass.png in Resources */,
 				5F11F18B20901D8B0077683A /* LaunchScreen.storyboard in Resources */,
 				5F11F18820901D8B0077683A /* Assets.xcassets in Resources */,
 				5F11F18620901D8A0077683A /* Main.storyboard in Resources */,
@@ -141,6 +144,7 @@
 			files = (
 				5F11F18320901D8A0077683A /* ViewController.swift in Sources */,
 				5F11F18120901D8A0077683A /* AppDelegate.swift in Sources */,
+				5F1E5D1420A2E32C0011D60C /* ARSCNBaseViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
