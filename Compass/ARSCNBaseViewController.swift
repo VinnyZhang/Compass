@@ -98,33 +98,39 @@ extension ARSCNBaseViewController: ARSCNViewDelegate {
         switch camera.trackingState{
         case .notAvailable:
             alertLabel.text = "跟踪不可用 "
+//            print("notAvailable = \(String(describing: gameView.session.currentFrame?.camera.eulerAngles))")
             UIView.animate(withDuration: 0.5) {
                 self.maskView.alpha = 0.5
             }
         case .limited(ARCamera.TrackingState.Reason.initializing):
             let title = "有限的跟踪 ，原因是："
             let desc = "正在初始化，请稍后"
+//            print("limited = \(String(describing: gameView.session.currentFrame?.camera.eulerAngles))")
             alertLabel.text = title + desc
             UIView.animate(withDuration: 0.5) {
                 self.maskView.alpha = 0.5
             }
         case .limited(ARCamera.TrackingState.Reason.relocalizing):
             alertLabel.text = "有限的跟踪，原因是：重新初始化"
+//            print("limited = \(String(describing: gameView.session.currentFrame?.camera.eulerAngles))")
             UIView.animate(withDuration: 0.5) {
                 self.maskView.alpha = 0.5
             }
         case .limited(ARCamera.TrackingState.Reason.excessiveMotion):
             alertLabel.text = "有限的跟踪，原因是：设备移动过快请注意"
+//            print("limited = \(String(describing: gameView.session.currentFrame?.camera.eulerAngles))")
             UIView.animate(withDuration: 0.5) {
                 self.maskView.alpha = 0.5
             }
         case .limited(ARCamera.TrackingState.Reason.insufficientFeatures):
             alertLabel.text = "有限的跟踪，原因是：提取不到足够的特征点，请移动设备"
+//            print("limited = \(String(describing: gameView.session.currentFrame?.camera.eulerAngles))")
             UIView.animate(withDuration: 0.5) {
                 self.maskView.alpha = 0.5
             }
         case .normal:
             alertLabel.text = "跟踪正常"
+//            print("normal = \(String(describing: gameView.session.currentFrame?.camera.eulerAngles))")
             UIView.animate(withDuration: 0.5) {
                 self.maskView.alpha = 0.0
             }
