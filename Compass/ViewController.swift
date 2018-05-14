@@ -106,25 +106,35 @@ class ViewController: ARSCNBaseViewController {
         
         motionManager = CMMotionManager()
         let queue = OperationQueue()
-        motionManager.deviceMotionUpdateInterval = 1.0
+        motionManager.deviceMotionUpdateInterval = 2.0
         motionManager.startDeviceMotionUpdates(to: queue) { (motion, error) in
-            print("heading = \(String(describing: motion?.heading))")
-            print("gX = \(String(describing: motion?.gravity.x))")
-            print("gY = \(String(describing: motion?.gravity.y))")
-            print("gZ = \(String(describing: motion?.gravity.z))")
-        }
-    }
-    
-    private func gyroActive() {
-        motionManager = CMMotionManager()
-        let queue = OperationQueue()
-        if motionManager.isGyroAvailable && motionManager.isGyroActive == false {
-            motionManager.gyroUpdateInterval = 0.01
-            motionManager.startGyroUpdates(to: queue) { (gyroData, error) in
-                print("Rotation x = \(String(describing: gyroData?.rotationRate.x))")
-                print("Rotation y = \(String(describing: gyroData?.rotationRate.y))")
-                print("Rotation z = \(String(describing: gyroData?.rotationRate.z))")
+            //手机位姿
+            print("roll = \(String(describing: motion?.attitude.roll))")// 绕Z轴
+            print("pitch = \(String(describing: motion?.attitude.pitch))")//绕X轴
+            print("yaw = \(String(describing: motion?.attitude.yaw))")//绕Y轴
+            
+            //z轴 = 0 x轴 > 0    = 0
+            //z轴 < 0  X轴 =0    = .pi/2
+            // z轴 < 0  x轴 > 0  = 
+            
+            
+            //计算Z轴的偏转
+            if ((motion?.attitude.roll) != nil) && ((motion?.attitude.pitch) != nil) {
+                
+                //            self.angle = (motion?.attitude.yaw)! + (motion?.attitude.roll)!
+//                self.angle = sqrt((motion?.attitude.roll)! * (motion?.attitude.roll)! + (motion?.attitude.pitch)! * (motion?.attitude.pitch)!)
+//                self.angle = motion?.attitude.roll
+//                self.angle = .pi/2
+//
+//                if !self.directionSuccess {
+//                    self.directionSuccess = true
+//                    self.changeWorldOrigin()
+//                }
+                
+                
             }
+            
+            
         }
     }
 
