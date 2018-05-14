@@ -74,9 +74,6 @@ class ViewController: ARSCNBaseViewController {
         changeWorldBtn.addTarget(self, action: #selector(showWorldOrign), for: .touchUpInside)
         self.view.addSubview(changeWorldBtn)
         
-        
-        
-        
     }
     
     /// 改变世界坐标原点
@@ -123,71 +120,12 @@ class ViewController: ARSCNBaseViewController {
             var yaw: Double = (motion?.attitude.yaw)! * 100
             yaw = yaw.rounded()/100
             
-//            print("roll = \(roll)")// 绕Z轴
-//            print("pitch = \(pitch)")//绕X轴
-//            print("yaw = \(yaw)")//绕Y轴
-            
             if !self.directionSuccess {
+                self.motionManager.stopDeviceMotionUpdates()
                 self.directionSuccess = true
                 self.angle = self.angle - roll
-//                self.angle = -roll
                 self.changeWorldOrigin()
             }
-            
-            
-            
-            //z轴 = 0 x轴 > 0    = 0
-            //z轴 < 0  X轴 =0    = .pi/2
-            // z轴 < 0  x轴 > 0  =
-            
-            if roll == 0.00 && pitch == 0.00 {//没有在x轴 z轴上发生旋转
-                if !self.directionSuccess {
-                    print("change1")
-                    self.motionManager.stopDeviceMotionUpdates()
-                    self.directionSuccess = true
-//                    self.angle = 0
-//                    self.angle = .pi/2
-//                    self.changeWorldOrigin()
-                }
-            }
-            else if pitch == 0.00 && roll < 0.00{//没有在x轴发生旋转 z轴发生旋转
-                if !self.directionSuccess {
-                    print("change2")
-                    self.motionManager.stopDeviceMotionUpdates()
-                    self.directionSuccess = true
-//                    self.angle = -.pi/2 + self.angle
-//                    self.angle = .pi/2
-//                    self.changeWorldOrigin()
-                }
-            }
-            else if roll == 0.00 && pitch > 0.00 {//z轴未发生旋转 x轴向上发生旋转
-                if !self.directionSuccess {
-                    print("change3")
-                    self.motionManager.stopDeviceMotionUpdates()
-                    self.directionSuccess = true
-//                    self.angle = .pi/2 + self.angle
-//                    self.angle = .pi/2
-//                    self.changeWorldOrigin()
-                }
-            }
-            
-            
-            //计算Z轴的偏转
-            if ((motion?.attitude.roll) != nil) && ((motion?.attitude.pitch) != nil) {
-                
-                //            self.angle = (motion?.attitude.yaw)! + (motion?.attitude.roll)!
-//                self.angle = sqrt((motion?.attitude.roll)! * (motion?.attitude.roll)! + (motion?.attitude.pitch)! * (motion?.attitude.pitch)!)
-//                self.angle = motion?.attitude.roll
-//                self.angle = .pi/2
-//
-//                if !self.directionSuccess {
-//                    self.directionSuccess = true
-//                    self.changeWorldOrigin()
-//                }
-                
-                
-            }
-            
             
         }
     }
@@ -209,31 +147,20 @@ extension ViewController: CLLocationManagerDelegate {
         
         //如果世界坐标系中z轴的方向与手机垂直时z轴的方向一致
         angle = -((180 - direction)/180 * .pi)//旋转角度 ，z轴负方向指向南方
+        let transform = direction/180 * .pi
         
         //如果世界坐标系中z轴的方向与手机垂直时z轴的方向垂直
 //        angle = (((180 - direction))/180 * .pi)
         
-       
 //        print("eulerAngles = \(String(describing: gameView.session.currentFrame?.camera.eulerAngles))")
         
         print("angle = \(angle)   direction = \(direction)")
         
         self.deviceMotionPush()
         
-        
-//        if !self.directionSuccess {
-//            print("change3")
-////            self.motionManager.stopDeviceMotionUpdates()
-//            self.directionSuccess = true
-//            //                    self.angle = .pi/2 + self.angle
-//            //                    self.angle = .pi/2
-////            self.changeWorldOrigin()
-//        }
-        
-        
         //设置动画
         UIView.animate(withDuration: 0.3) {
-            self.compassImageView.transform = CGAffineTransform(rotationAngle: -CGFloat(self.angle))
+            self.compassImageView.transform = CGAffineTransform(rotationAngle: -CGFloat(transform))
         }
         
         
