@@ -66,7 +66,7 @@ class ViewController: ARSCNBaseViewController {
         compassImageView.image = UIImage(named: "compass")
         
         CLManager.delegate = self
-//        CLManager.startUpdatingHeading()
+        CLManager.startUpdatingHeading()
         
         changeWorldBtn = UIButton(frame: CGRect(x: 10, y: 200, width: 40, height: 40))
         changeWorldBtn.setTitle("C", for: .normal)
@@ -74,7 +74,7 @@ class ViewController: ARSCNBaseViewController {
         changeWorldBtn.addTarget(self, action: #selector(showWorldOrign), for: .touchUpInside)
         self.view.addSubview(changeWorldBtn)
         
-        self.deviceMotionPush()
+        
         
         
     }
@@ -85,7 +85,7 @@ class ViewController: ARSCNBaseViewController {
     @objc func changeWorldOrigin() {
 //        Y轴作为重力方向，只需绕着Y轴旋转世界原点坐标的方向，来匹配 东南西北。匹配后 Z轴正方向指向南方
         let matrix4_X = SCNMatrix4MakeRotation(0.0, 1.0, 0.0, 0.0)
-        let matrix4_Y = SCNMatrix4MakeRotation(Float(angle), 0.0, 1.0, 0.0)
+        let matrix4_Y = SCNMatrix4MakeRotation(Float(self.angle), 0.0, 1.0, 0.0)
         let matrix4_Z = SCNMatrix4MakeRotation(0.0, 0.0, 0.0, 1.0)
         let matrix4_T = SCNMatrix4MakeTranslation(0.0, 0.0, 0.0)
         
@@ -106,16 +106,70 @@ class ViewController: ARSCNBaseViewController {
         
         motionManager = CMMotionManager()
         let queue = OperationQueue()
-        motionManager.deviceMotionUpdateInterval = 2.0
+        motionManager.deviceMotionUpdateInterval = 1.0
         motionManager.startDeviceMotionUpdates(to: queue) { (motion, error) in
             //手机位姿
-            print("roll = \(String(describing: motion?.attitude.roll))")// 绕Z轴
-            print("pitch = \(String(describing: motion?.attitude.pitch))")//绕X轴
-            print("yaw = \(String(describing: motion?.attitude.yaw))")//绕Y轴
+            print("roll z = \(String(describing: motion?.attitude.roll))  pitch x = \(String(describing: motion?.attitude.pitch))  yaw y = \(String(describing: motion?.attitude.yaw))")
+            
+//            print("normal = \(String(describing: self.gameView.session.currentFrame?.camera.eulerAngles))")
+            
+            //取两位小数弧度
+            var roll: Double = (motion?.attitude.roll)! * 100
+            roll = roll.rounded()/100
+            
+            var pitch: Double = (motion?.attitude.pitch)! * 100
+            pitch = pitch.rounded()/100
+            
+            var yaw: Double = (motion?.attitude.yaw)! * 100
+            yaw = yaw.rounded()/100
+            
+//            print("roll = \(roll)")// 绕Z轴
+//            print("pitch = \(pitch)")//绕X轴
+//            print("yaw = \(yaw)")//绕Y轴
+            
+            if !self.directionSuccess {
+                self.directionSuccess = true
+                self.angle = self.angle - roll
+//                self.angle = -roll
+                self.changeWorldOrigin()
+            }
+            
+            
             
             //z轴 = 0 x轴 > 0    = 0
             //z轴 < 0  X轴 =0    = .pi/2
-            // z轴 < 0  x轴 > 0  = 
+            // z轴 < 0  x轴 > 0  =
+            
+            if roll == 0.00 && pitch == 0.00 {//没有在x轴 z轴上发生旋转
+                if !self.directionSuccess {
+                    print("change1")
+                    self.motionManager.stopDeviceMotionUpdates()
+                    self.directionSuccess = true
+//                    self.angle = 0
+//                    self.angle = .pi/2
+//                    self.changeWorldOrigin()
+                }
+            }
+            else if pitch == 0.00 && roll < 0.00{//没有在x轴发生旋转 z轴发生旋转
+                if !self.directionSuccess {
+                    print("change2")
+                    self.motionManager.stopDeviceMotionUpdates()
+                    self.directionSuccess = true
+//                    self.angle = -.pi/2 + self.angle
+//                    self.angle = .pi/2
+//                    self.changeWorldOrigin()
+                }
+            }
+            else if roll == 0.00 && pitch > 0.00 {//z轴未发生旋转 x轴向上发生旋转
+                if !self.directionSuccess {
+                    print("change3")
+                    self.motionManager.stopDeviceMotionUpdates()
+                    self.directionSuccess = true
+//                    self.angle = .pi/2 + self.angle
+//                    self.angle = .pi/2
+//                    self.changeWorldOrigin()
+                }
+            }
             
             
             //计算Z轴的偏转
@@ -150,22 +204,36 @@ extension ViewController: CLLocationManagerDelegate {
         
         //获取设备的朝向
 //        let direction = newHeading.magneticHeading
+        CLManager.stopUpdatingHeading()
         let direction = newHeading.trueHeading
-        angle = direction/180 * .pi
+        
+        //如果世界坐标系中z轴的方向与手机垂直时z轴的方向一致
+        angle = -((180 - direction)/180 * .pi)//旋转角度 ，z轴负方向指向南方
+        
+        //如果世界坐标系中z轴的方向与手机垂直时z轴的方向垂直
+//        angle = (((180 - direction))/180 * .pi)
+        
+       
+//        print("eulerAngles = \(String(describing: gameView.session.currentFrame?.camera.eulerAngles))")
+        
+        print("angle = \(angle)   direction = \(direction)")
+        
+        self.deviceMotionPush()
         
         
-        
-//        print("magneticHeading = \(newHeading.magneticHeading) ,  trueHeading = \(newHeading.trueHeading)  , headingAccuracy = \(newHeading.headingAccuracy)")
-        
-//        if !directionSuccess {
-//            directionSuccess = true
-//            changeWorldOrigin()
+//        if !self.directionSuccess {
+//            print("change3")
+////            self.motionManager.stopDeviceMotionUpdates()
+//            self.directionSuccess = true
+//            //                    self.angle = .pi/2 + self.angle
+//            //                    self.angle = .pi/2
+////            self.changeWorldOrigin()
 //        }
         
+        
         //设置动画
-        UIView.animate(withDuration: 0.5) {
+        UIView.animate(withDuration: 0.3) {
             self.compassImageView.transform = CGAffineTransform(rotationAngle: -CGFloat(self.angle))
-            
         }
         
         

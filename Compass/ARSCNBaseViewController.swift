@@ -131,6 +131,18 @@ extension ARSCNBaseViewController: ARSCNViewDelegate {
         case .normal:
             alertLabel.text = "跟踪正常"
 //            print("normal = \(String(describing: gameView.session.currentFrame?.camera.eulerAngles))")
+            
+//            let matrix4_X = SCNMatrix4MakeRotation(0.0, 1.0, 0.0, 0.0)
+//            let matrix4_Y = SCNMatrix4MakeRotation(-(gameView.session.currentFrame?.camera.eulerAngles.y)!, 0.0, 1.0, 0.0)
+//            let matrix4_Z = SCNMatrix4MakeRotation(0.0, 0.0, 0.0, 1.0)
+//            let matrix4_T = SCNMatrix4MakeTranslation(0.0, 0.0, 0.0)
+//
+//            let mXY =  SCNMatrix4Mult(matrix4_X, matrix4_Y)
+//            let mXYZ = SCNMatrix4Mult(mXY, matrix4_Z)
+//            let mT = SCNMatrix4Mult(mXYZ, matrix4_T)
+//
+//            gameView.session.setWorldOrigin(relativeTransform: simd_float4x4(mT))
+//
             UIView.animate(withDuration: 0.5) {
                 self.maskView.alpha = 0.0
             }
