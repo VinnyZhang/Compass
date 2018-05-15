@@ -17,7 +17,6 @@ class ViewController: ARSCNBaseViewController {
     var compassImageView: UIImageView!
     var CLManager = CLLocationManager()
     var directionSuccess = false
-    var changeWorldBtn: UIButton!
     var angle: Double!
     var motionManager: CMMotionManager!
     
@@ -25,15 +24,11 @@ class ViewController: ARSCNBaseViewController {
     //    MARK: - life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
         setUpMyViews()
-        
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    
     }
     
     override func setupSession() {
@@ -55,9 +50,6 @@ class ViewController: ARSCNBaseViewController {
     
     //    MARK: - internal methods
     
-    
-
-    
     /// 初始化
     func setUpMyViews() {
         compassImageView = UIImageView()
@@ -67,12 +59,6 @@ class ViewController: ARSCNBaseViewController {
         
         CLManager.delegate = self
         CLManager.startUpdatingHeading()
-        
-        changeWorldBtn = UIButton(frame: CGRect(x: 10, y: 200, width: 40, height: 40))
-        changeWorldBtn.setTitle("C", for: .normal)
-        changeWorldBtn.setTitleColor(UIColor.blue, for: .normal)
-        changeWorldBtn.addTarget(self, action: #selector(showWorldOrign), for: .touchUpInside)
-        self.view.addSubview(changeWorldBtn)
         
     }
     
@@ -95,15 +81,16 @@ class ViewController: ARSCNBaseViewController {
     
     /// 展示世界坐标系原点
     @objc func showWorldOrign() {
-        
         print("worldOrign = \(String(describing: gameView.session.currentFrame?.camera.eulerAngles))")
     }
     
+    
+    /// 开启设备位姿检测
     private func deviceMotionPush() {
         
         motionManager = CMMotionManager()
         let queue = OperationQueue()
-        motionManager.deviceMotionUpdateInterval = 1.0
+        motionManager.deviceMotionUpdateInterval = 0.5
         motionManager.startDeviceMotionUpdates(to: queue) { (motion, error) in
             //手机位姿
             print("roll z = \(String(describing: motion?.attitude.roll))  pitch x = \(String(describing: motion?.attitude.pitch))  yaw y = \(String(describing: motion?.attitude.yaw))")
@@ -114,11 +101,11 @@ class ViewController: ARSCNBaseViewController {
             var roll: Double = (motion?.attitude.roll)! * 100
             roll = roll.rounded()/100
             
-            var pitch: Double = (motion?.attitude.pitch)! * 100
-            pitch = pitch.rounded()/100
-            
-            var yaw: Double = (motion?.attitude.yaw)! * 100
-            yaw = yaw.rounded()/100
+//            var pitch: Double = (motion?.attitude.pitch)! * 100
+//            pitch = pitch.rounded()/100
+//
+//            var yaw: Double = (motion?.attitude.yaw)! * 100
+//            yaw = yaw.rounded()/100
             
             if !self.directionSuccess {
                 self.motionManager.stopDeviceMotionUpdates()
@@ -144,7 +131,6 @@ extension ViewController: CLLocationManagerDelegate {
 //        let direction = newHeading.magneticHeading
         CLManager.stopUpdatingHeading()
         let direction = newHeading.trueHeading
-        
         //如果世界坐标系中z轴的方向与手机垂直时z轴的方向一致
         angle = -((180 - direction)/180 * .pi)//旋转角度 ，z轴负方向指向南方
         let transform = direction/180 * .pi
