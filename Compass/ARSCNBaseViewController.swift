@@ -130,7 +130,7 @@ extension ARSCNBaseViewController: ARSCNViewDelegate {
             }
         case .normal:
             alertLabel.text = "跟踪正常"
-//            print("limited = \(String(describing: gameView.session.currentFrame?.camera.eulerAngles))")
+            print("limited = \(String(describing: gameView.session.currentFrame?.camera.eulerAngles))")
             UIView.animate(withDuration: 0.5) {
                 self.maskView.alpha = 0.0
             }
